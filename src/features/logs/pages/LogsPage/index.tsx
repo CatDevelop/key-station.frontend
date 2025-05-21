@@ -13,7 +13,7 @@ import {
     useToast,
 } from "@pin-code/uikit.lib";
 import { useCallback, useEffect, useState } from "react";
-import { Calendar, MapPin, RefreshCcw, User, UserPlus } from "lucide-react";
+import { Calendar, MapPin, RefreshCcw, User } from "lucide-react";
 import { $allLogs, getAllLogsFx } from "@store/logs/allLogs.ts";
 import { useUnit } from "effector-react";
 
@@ -22,7 +22,7 @@ import { FLOORS } from "@/types/floors.ts";
 
 const LogsPage = () => {
     const { toast } = useToast();
-    const [getAllLogs, isLoadingLogs] = useUnit([getAllLogsFx, getAllLogsFx.pending]);
+    const [getAllLogs] = useUnit([getAllLogsFx]);
     const allLogs = useUnit($allLogs);
 
     const [searchTerm, setSearchTerm] = useState("");
