@@ -1,0 +1,1718 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "summary": "Регистрация пользователя",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "summary": "Авторизация пользователя",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Пользователь успешно авторизовался",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/LoginResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные данные",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Пользователь не найден": {
+                    "value": {
+                      "meta": {
+                        "timestamp": "2025-03-03T15:50:57.083Z",
+                        "statusCode": 400
+                      },
+                      "data": {
+                        "message": "Пользователь не найден."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Пользователь существует, но введён неверный пароль",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Неверный пароль": {
+                    "value": {
+                      "meta": {
+                        "timestamp": "2025-03-03T15:50:57.083Z",
+                        "statusCode": 401
+                      },
+                      "data": {
+                        "message": "Неверный пароль."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/oauth/callback/{provider}": {
+      "get": {
+        "operationId": "AuthController_callback",
+        "summary": "Авторизация через Oauth",
+        "description": "Используется провайдерами\n\nПеренаправляет на фронт по адресу вместе с токеном /auth/callback?accessToken=ТОКЕН",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "query",
+            "description": "Код авторизации",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "description": "Провайдер авторизации",
+            "schema": {
+              "example": "yandex",
+              "enum": [
+                "yandex",
+                "github"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/oauth/connect/{provider}": {
+      "get": {
+        "operationId": "AuthController_connect",
+        "summary": "Получение ссылки на Oauth авторизацию",
+        "parameters": [
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "description": "Провайдер авторизации",
+            "schema": {
+              "example": "yandex",
+              "enum": [
+                "yandex",
+                "github"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectToProviderResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/user/profile": {
+      "get": {
+        "operationId": "UserController_findProfile",
+        "summary": "Получение профиля пользователя",
+        "parameters": [],
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "UserController_updateProfile",
+        "summary": "Обновление профиля пользователя",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/user/by-id/{id}": {
+      "get": {
+        "operationId": "UserController_findById",
+        "summary": "Получение пользователя по ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/customer": {
+      "post": {
+        "operationId": "CustomerController_create",
+        "summary": "Создание нового клиента системы (Преподаватели и ученики)",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Созданный клиент",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/CreateCellResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "CustomerController_findAll",
+        "summary": "Получение списка клиентов",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Созданный клиент",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/FindAllCustomersDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "CustomerController_update",
+        "summary": "Обновление клиента системы",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/customer/{rfid}": {
+      "get": {
+        "operationId": "CustomerController_findByRfid",
+        "summary": "Получение клиента по пропуску",
+        "parameters": [
+          {
+            "name": "rfid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "123412",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Клиент",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/FindByRfidCustomerResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/customer/{id}": {
+      "delete": {
+        "operationId": "CustomerController_remove",
+        "summary": "Удаление клиента системы",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "customer"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/cell": {
+      "post": {
+        "operationId": "CellController_create",
+        "summary": "Создание ячейки сейфа",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCellDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Созданная ячейка",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/CreateCellResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "cell"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "CellController_findAll",
+        "summary": "Получение списка ячеек",
+        "parameters": [
+          {
+            "name": "floor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список ячеек",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/FindAllCellsResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "cell"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/cell/block/{cellId}": {
+      "post": {
+        "operationId": "CellController_block",
+        "summary": "Заблокировать ячейку сейфа",
+        "parameters": [
+          {
+            "name": "cellId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "cell"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/cell/unblock/{cellId}": {
+      "post": {
+        "operationId": "CellController_unblock",
+        "summary": "Разблокировать ячейку сейфа",
+        "parameters": [
+          {
+            "name": "cellId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "cell"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/cell/{id}": {
+      "get": {
+        "operationId": "CellController_findOne",
+        "summary": "Получение информации о ячейке",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "cell"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "CellController_remove",
+        "summary": "Удаление ячейки сейфа",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "cell"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/cell/canCustomerOut/{customerRfid}": {
+      "get": {
+        "operationId": "CellController_canCustomerOut",
+        "summary": "Может ли пользователь выйти?",
+        "parameters": [
+          {
+            "name": "customerRfid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "cell"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/key/take": {
+      "post": {
+        "operationId": "KeyLogController_takeKey",
+        "summary": "Взять ключ",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TakeKeyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "key"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/key/return": {
+      "post": {
+        "operationId": "KeyLogController_returnKey",
+        "summary": "Вернуть ключ",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReturnKeyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "key"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/key/logs": {
+      "get": {
+        "operationId": "KeyLogController_findAll",
+        "summary": "Получение списка логов",
+        "parameters": [
+          {
+            "name": "cellId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список логов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/FindAllLogsResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Не авторизован": {
+                    "value": {
+                      "meta": {
+                        "statusCode": 401,
+                        "timestamp": "2025-03-03T15:30:34.177Z"
+                      },
+                      "data": {
+                        "message": "Unauthorized"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "key"
+        ],
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "AppController_getHealth",
+        "summary": "Проверка работоспособности БД",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {},
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        },
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "system"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Key Station Documentation",
+    "description": "API станции для выдачи ключей по пропуску преподавателей",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Работа с авторизацией пользователей"
+    },
+    {
+      "name": "user",
+      "description": "Работа с данными пользователей"
+    },
+    {
+      "name": "cell",
+      "description": "Работа с ячейками сейфа"
+    },
+    {
+      "name": "customer",
+      "description": "Работа с клиентам системы"
+    },
+    {
+      "name": "key",
+      "description": "Работа с ключами"
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://backend-keystation.pincode-infra.ru/"
+    },
+    {
+      "url": "http://localhost:9001"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "accessToken": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "refreshToken": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Логин пользователя",
+            "example": "CatDev"
+          },
+          "email": {
+            "type": "string",
+            "description": "Почта пользователя",
+            "example": "test@mail.ru"
+          },
+          "password": {
+            "type": "string",
+            "description": "Пароль пользователя",
+            "example": "P@ssw0rd"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Токен авторизации",
+            "example": "eyJhbGciOiJIUzI2NiIsInR5cCI2IkpXVCJ9.eyJpZCI6IjZmZTAwNzkwLTA5ZGUtNDZiNC1hYmVjLWRjOTUyNTQ5N2RlYiIsImVtYWlsIjoici6tYXhpbWthQG1haWwucnUiLCJwcm82aWRlciI6IiIsImlhdCI6MTc0MTAyNjE5MywiZXhwIjoxNzQzNjE4MTkzfQ.zvjUbE_H0GZr8yoD7uIlNNnbadgSfWfjEocEbLYUe6Q"
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Почта пользователя",
+            "example": "test@mail.ru"
+          },
+          "password": {
+            "type": "string",
+            "description": "Пароль пользователя",
+            "example": "P@ssw0rd"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "ConnectToProviderResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Ссылка для редиректа",
+            "example": "https://oauth.yandex.ru/authorize?response_type=code&client_id=6fa1e6565936416d91d4d151d5a1778a&redirect_uri=http%3A%2F%2Flocalhost%3A9001%2Fapi%2Fauth%2Foauth%2Fcallback%2Fyandex&scope=login%3Aemail+login%3Aavatar+login%3Ainfo&access_type=offline&prompt=select_account"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isTwoFactorEnabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "isTwoFactorEnabled"
+        ]
+      },
+      "CreatedCustomerDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "18412fbd-201a-4e0b-aa00-b21f3ac26b0a"
+          },
+          "name": {
+            "type": "string",
+            "example": "Рожков Максим Евгеньевич"
+          },
+          "rfid": {
+            "type": "string",
+            "example": "123412"
+          },
+          "role": {
+            "type": "string",
+            "example": "TEACHER"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-05-03T11:16:06.437Z"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "rfid",
+          "role",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreatedCell": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "4cd5975e-e958-45d6-b426-ad68b15bccd6"
+          },
+          "floor": {
+            "type": "number",
+            "example": 1
+          },
+          "classroom": {
+            "type": "number",
+            "example": 210
+          },
+          "isLocked": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-05-03T11:16:06.437Z"
+          },
+          "customerId": {
+            "type": "string",
+            "example": null
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CreatedCustomerDto"
+          }
+        },
+        "required": [
+          "id",
+          "floor",
+          "classroom",
+          "isLocked",
+          "createdAt",
+          "updatedAt",
+          "customerId",
+          "customer"
+        ]
+      },
+      "CreateCellResponseDto": {
+        "type": "object",
+        "properties": {
+          "cell": {
+            "$ref": "#/components/schemas/CreatedCell"
+          }
+        },
+        "required": [
+          "cell"
+        ]
+      },
+      "CreateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Рожков Максим Евгеньевич"
+          },
+          "rfid": {
+            "type": "string",
+            "example": "123412"
+          },
+          "role": {
+            "type": "string",
+            "example": "TEACHER"
+          }
+        },
+        "required": [
+          "name",
+          "rfid",
+          "role"
+        ]
+      },
+      "FindAllCustomersDto": {
+        "type": "object",
+        "properties": {
+          "customers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatedCustomerDto"
+            }
+          }
+        },
+        "required": [
+          "customers"
+        ]
+      },
+      "FindByRfidCustomerResponseDto": {
+        "type": "object",
+        "properties": {
+          "customer": {
+            "$ref": "#/components/schemas/CreatedCustomerDto"
+          }
+        },
+        "required": [
+          "customer"
+        ]
+      },
+      "UpdateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Рожков Максим Евгеньевич"
+          },
+          "rfid": {
+            "type": "string",
+            "example": "123412"
+          },
+          "role": {
+            "type": "string",
+            "example": "TEACHER"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "CreateCellDto": {
+        "type": "object",
+        "properties": {
+          "floor": {
+            "type": "number"
+          },
+          "classroom": {
+            "type": "number",
+            "description": "Номер этажа"
+          }
+        },
+        "required": [
+          "floor",
+          "classroom"
+        ]
+      },
+      "FindAllCellsResponseDto": {
+        "type": "object",
+        "properties": {
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatedCell"
+            }
+          }
+        },
+        "required": [
+          "cells"
+        ]
+      },
+      "TakeKeyDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "cellId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "cellId"
+        ]
+      },
+      "ReturnKeyDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "cellId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "cellId"
+        ]
+      },
+      "Cell": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "4cd5975e-e958-45d6-b426-ad68b15bccd6"
+          },
+          "floor": {
+            "type": "number",
+            "example": 1
+          },
+          "classroom": {
+            "type": "number",
+            "example": 210
+          },
+          "isLocked": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-05-03T11:16:06.437Z"
+          },
+          "customerId": {
+            "type": "string",
+            "example": null
+          }
+        },
+        "required": [
+          "id",
+          "floor",
+          "classroom",
+          "isLocked",
+          "createdAt",
+          "updatedAt",
+          "customerId"
+        ]
+      },
+      "FindAllLogResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "0efca53f-a44a-402c-a4fa-fb7011d8b1e9"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "TAKEN",
+              "RETURNED",
+              "BLOCK",
+              "UNBLOCK"
+            ],
+            "example": "BLOCK"
+          },
+          "cellId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "1d4e42ae-cd1a-4240-936e-144fbb99ec6d"
+          },
+          "customerId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b6b84673-3699-464c-a41b-beabd8835d84"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-05-03T11:16:06.437Z"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CreatedCustomerDto"
+          },
+          "cell": {
+            "$ref": "#/components/schemas/Cell"
+          }
+        },
+        "required": [
+          "id",
+          "action",
+          "cellId",
+          "customerId",
+          "timestamp",
+          "customer",
+          "cell"
+        ]
+      },
+      "FindAllLogsResponseDto": {
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FindAllLogResponseDto"
+            }
+          }
+        },
+        "required": [
+          "logs"
+        ]
+      }
+    }
+  }
+}

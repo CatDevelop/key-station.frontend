@@ -1,0 +1,2 @@
+/api/*    https://backend-swagger.pincode-infra.ru/api/:splat
+/*      /index.html  200
